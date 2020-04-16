@@ -1,4 +1,5 @@
 import { db } from '../../config';
+import { hashSync } from 'bcryptjs';
 
 export const updateUserById = async (req, res) => {
   try {
@@ -13,7 +14,7 @@ export const updateUserById = async (req, res) => {
       .where('user_guid', id)
       .update({
         user_email: email,
-        user_pw: password,
+        user_pw: hashSync(password, 8),
         user_mobile: mobile,
         user_language: format,
         user_locale: language
