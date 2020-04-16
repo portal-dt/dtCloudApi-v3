@@ -8,6 +8,7 @@ import { getDocumentById } from './src/controllers/getDocumentById';
 import { getDocumentsByCustomerId } from './src/controllers/getDocumentsByCustomerId';
 import { updateDocumentOpened } from './src/controllers/updateDocumentOpened';
 import { getLatestDocumentsByCustomerId } from './src/controllers/getLatestDocumentsByCustomerId';
+import { updateUserById } from './src/controllers/updateUserById';
 import { login } from './src/controllers/login';
 
 const app = express();
@@ -20,7 +21,8 @@ app.use(bodyParser.json());
 app.get('/v3/archive/:id', verifyToken, getDocumentById);
 app.get('/v3/archive/documents/:id', verifyToken, getDocumentsByCustomerId);
 app.get('/v3/archive/documents/latest/:id', verifyToken, getLatestDocumentsByCustomerId);
-app.post('/v3/archive/document', verifyToken, updateDocumentOpened);
+app.put('/v3/archive/document', verifyToken, updateDocumentOpened);
+app.put('/v3/users/:id', verifyToken, updateUserById);
 
 app.post('/v3/login', login);
 
