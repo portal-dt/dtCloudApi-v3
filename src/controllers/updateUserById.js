@@ -6,7 +6,7 @@ export const updateUserById = async (req, res) => {
     const { email, password, mobile, language, format } = req.body;
     const { id } = req.params;
 
-    if (!email || !password || !mobile || !language || !format) {
+    if (!email && !password && !mobile && !language && !format) {
       return res.status(403).json({ message: 'No correct data specified.' });
     }
 
@@ -14,7 +14,7 @@ export const updateUserById = async (req, res) => {
       .where('user_guid', id)
       .update({
         user_email: email,
-        user_pw: hashSync(password, 8),
+        user_pw: password && hashSync(password, 8),
         user_mobile: mobile,
         user_language: format,
         user_locale: language
