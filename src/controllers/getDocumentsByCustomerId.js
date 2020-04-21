@@ -1,13 +1,12 @@
 import { db } from '../../config';
 import { getMappedDocuments } from '../utils';
 
-// id for testing 19096226325
 export const getDocumentsByCustomerId = async (req, res) => {
   try {
     const { id } = req.params;
     const { content } = req.query;
 
-    const data = await db('archive.storage').where('storage_user_guid', id); // to sue customer id
+    const data = await db('archive.storage').where('storage_user_guid', id);
 
     if (!data.length) {
       return res.status(404).json({ message: 'Documents not found' });
