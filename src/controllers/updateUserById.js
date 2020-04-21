@@ -16,7 +16,7 @@ export const updateUserById = async (req, res) => {
         user_email: email,
         user_pw: password && hashSync(password, 8),
         user_mobile: mobile,
-        user_language: format,
+        user_langauge: format,
         user_locale: language
       });
 
