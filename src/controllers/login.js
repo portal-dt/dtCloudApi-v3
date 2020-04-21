@@ -18,14 +18,14 @@ export const login = async (req, res) => {
     const isPasswordValid = compareSync(password, user.user_pw);
 
     if (!isPasswordValid) {
-      res.status(401).json({ auth: false, accessToken: null, reason: 'Invalid Password!' });
+      return res.status(401).json({ auth: false, accessToken: null, reason: 'Invalid Password!' });
     }
 
     const token = jwt.sign({ id: user.user_guid }, 'secretKey', {
       expiresIn: 10800 // 3h
     });
 
-    res.status(200).json({
+    return res.status(200).json({
       auth: true,
       accessToken: token,
       user: {
@@ -34,11 +34,11 @@ export const login = async (req, res) => {
         lastName: user.user_lastname,
         email: user.user_email,
         mobile: user.user_mobile,
-        locale: user.user_locale,
-        language: user.user_language
+        language: user.user_locale,
+        format: user.user_langauge
       }
     });
   } catch (error) {
-    res.status(500).json({ message: error });
+    return res.status(500).json({ message: error });
   }
 };
