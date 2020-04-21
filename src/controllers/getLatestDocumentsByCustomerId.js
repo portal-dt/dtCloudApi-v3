@@ -7,7 +7,7 @@ export const getLatestDocumentsByCustomerId = async (req, res) => {
     const { content } = req.query;
 
     const data = await db('archive.storage')
-      .where('storage_md_debtorid', id)
+      .where('storage_user_guid', id)
       .orderBy('storage_timestamp', 'desc')
       .limit(5);
 

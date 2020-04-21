@@ -1,12 +1,20 @@
-// import { db } from '../../config';
-// import { getDocumentFromS3 } from '../utils';
-//
-// export const getDocuments = (req, res) => {
-//   try {
-//     const { id } = req.params;
-//   } catch (error) {
-//     return res.status(500).send({ message: error });
-//   }
-// };
+import { db } from '../../config';
+import { getMappedDocuments } from '../utils';
 
-//todo:  do we need this?
+export const getDocuments = async (req, res) => {
+  try {
+    const { content } = req.query;
+
+    const data = await db('archive.storage');
+
+    if (!data.length) {
+      return res.status(404).json({ message: 'Documents not found' });
+    }
+
+    const documents = await getMappedDocuments(data, content);
+
+    return res.status(200).json({ documents });
+  } catch (error) {
+    return res.status(500).json({ message: error });
+  }
+};

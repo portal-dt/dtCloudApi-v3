@@ -7,7 +7,7 @@ export const getDocumentsByCustomerId = async (req, res) => {
     const { id } = req.params;
     const { content } = req.query;
 
-    const data = await db('archive.storage').where('storage_md_debtorid', id); // to sue customer id
+    const data = await db('archive.storage').where('storage_user_guid', id); // to sue customer id
 
     if (!data.length) {
       return res.status(404).json({ message: 'Documents not found' });
