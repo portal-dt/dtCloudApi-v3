@@ -11,7 +11,21 @@ export const getDocuments = async (req, res) => {
       return res.status(404).json({ message: 'Documents not found' });
     }
 
-    const documents = await getMappedDocuments(data, content);
+    const mappedDocuments = await getMappedDocuments(data, content);
+
+    const documents = await Promise.all(
+      mappedDocuments.map(async (document) => {
+        const [userNames = {}] = await db
+          .select('user_firstname', 'user_lastname')
+          .from('archive.users')
+          .where({ user_guid: document.userId});
+
+        return {
+          ...document,
+          userName: !userNames.user_firstname ? 'John Doe' : `${userNames.user_firstname} ${userNames.user_lastname}`
+        };
+      })
+    );
 
     return res.status(200).json({ documents });
   } catch (error) {

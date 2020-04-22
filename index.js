@@ -18,14 +18,15 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
+//todo add verifyToken middleware
 
-app.get('/v3/archive/documents', verifyToken, getDocuments);
-app.get('/v3/archive/documents/:id', verifyToken, getDocumentsByCustomerId);
-app.get('/v3/archive/documents/latest/:id', verifyToken, getLatestDocumentsByCustomerId);
-app.get('/v3/archive/document/:id', verifyToken, getDocumentById);
-app.put('/v3/archive/document', verifyToken, updateDocumentOpened);
-app.put('/v3/users/:id', verifyToken, updateUserById);
-app.get('/v3/users/:id', verifyToken, getUserById);
+app.get('/v3/archive/documents', getDocuments);
+app.get('/v3/archive/documents/:id', getDocumentsByCustomerId);
+app.get('/v3/archive/documents/latest/:id', getLatestDocumentsByCustomerId);
+app.get('/v3/archive/document/:id', getDocumentById);
+app.put('/v3/archive/document', updateDocumentOpened);
+app.put('/v3/users/:id', updateUserById);
+app.get('/v3/users/:id', getUserById);
 
 app.post('/v3/login', login);
 

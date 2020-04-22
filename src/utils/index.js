@@ -24,6 +24,7 @@ export const getMappedDocuments = async (data, withContent) => await Promise.all
     const {
       storage_guid: documentId,
       storage_md_doctype: type,
+      storage_user_guid: userId,
       storage_s3link: bucketLink,
       storage_secret: documentKey,
       storage_md_duedate: dueDate,
@@ -40,6 +41,7 @@ export const getMappedDocuments = async (data, withContent) => await Promise.all
     return {
       documentId,
       type,
+      userId,
       dueDate,
       openedAt,
       invoiceDate,
