@@ -22,7 +22,7 @@ export const getDocuments = async (req, res) => {
 
         return {
           ...document,
-          userName: !userNames.user_firstname ? 'John Doe' : `${userNames.user_firstname} ${userNames.user_lastname}`
+          userName: `${userNames.user_firstname} ${userNames.user_lastname}`
         };
       })
     );

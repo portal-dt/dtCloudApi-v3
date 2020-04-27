@@ -6,6 +6,7 @@ import { verifyToken } from './middleware';
 
 import { getDocumentById } from './src/controllers/getDocumentById';
 import { getDocuments } from './src/controllers/getDocuments';
+import { getCustomers } from './src/controllers/getCustomers';
 import { getDocumentsByCustomerId } from './src/controllers/getDocumentsByCustomerId';
 import { updateDocumentOpened } from './src/controllers/updateDocumentOpened';
 import { getLatestDocumentsByCustomerId } from './src/controllers/getLatestDocumentsByCustomerId';
@@ -23,6 +24,7 @@ app.use(bodyParser.json());
 app.get('/v3/archive/documents', getDocuments);
 app.get('/v3/archive/documents/:id', getDocumentsByCustomerId);
 app.get('/v3/archive/documents/latest/:id', getLatestDocumentsByCustomerId);
+app.get('/v3/archive/customers', getCustomers);
 app.get('/v3/archive/document/:id', getDocumentById);
 app.put('/v3/archive/document', updateDocumentOpened);
 app.put('/v3/users/:id', updateUserById);
