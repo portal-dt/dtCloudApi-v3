@@ -15,14 +15,15 @@ export const getDocuments = async (req, res) => {
 
     const documents = await Promise.all(
       mappedDocuments.map(async (document) => {
-        const [userNames = {}] = await db
-          .select('user_firstname', 'user_lastname')
+        const [userData = {}] = await db
+          .select('user_firstname', 'user_lastname', 'user_email')
           .from('archive.users')
-          .where({ user_guid: document.userId});
+          .where({ user_guid: document.userId });
 
         return {
           ...document,
-          userName: `${userNames.user_firstname} ${userNames.user_lastname}`
+          userName: `${userData.user_firstname} ${userData.user_lastname}`,
+          email: userData.user_email
         };
       })
     );
