@@ -32,6 +32,9 @@ export const getMappedDocuments = async (data, withContent) => await Promise.all
       storage_read_timestamp: openedAt,
       storage_md_invoicedate: invoiceDate,
       storage_md_invoicenumber: invoiceNumber,
+      storage_md_ocr: referenceNumber,
+      storage_md_amountdue: dueDateAmount,
+      storage_md_directdebit: isDirectDebit,
     } = dataEntry;
 
     if (withContent === 'true') {
@@ -46,6 +49,9 @@ export const getMappedDocuments = async (data, withContent) => await Promise.all
       openedAt,
       invoiceDate,
       invoiceNumber,
+      referenceNumber,
+      isDirectDebit,
+      dueDateAmount,
       file: document,
       timestamp
     };
