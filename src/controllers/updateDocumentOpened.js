@@ -9,7 +9,7 @@ export const updateDocumentOpened = async (req, res) => {
     }
 
     await db('archive.storage')
-      .where('storage_md_debtorid', documentId)
+      .where('storage_guid', documentId)
       .update('storage_read_timestamp', openedAt);
 
     return res.status(200).json({ message: 'Updated successfully' });
