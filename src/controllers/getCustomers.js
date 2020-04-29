@@ -7,7 +7,9 @@ export const getCustomers = async (req, res) => {
         'user_firstname',
         'user_lastname',
         'user_email',
-        'user_last_login')
+        'user_last_login',
+        'user_guid'
+      )
       .where('user_role', 'c')
       .from('archive.users');
 
@@ -16,6 +18,7 @@ export const getCustomers = async (req, res) => {
     }
 
     const customers = customerDbEntries.map((customer, i) => ({
+      id: customer.user_guid,
       customerName: `${customer.user_firstname} ${customer.user_lastname}`,
       email: customer.user_email,
       accountNumber: i,
