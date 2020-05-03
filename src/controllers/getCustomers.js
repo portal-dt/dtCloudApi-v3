@@ -33,7 +33,7 @@ export const getCustomers = async (req, res) => {
           id: customer.user_guid,
           customerName: `${customer.user_firstname} ${customer.user_lastname}`,
           email: customer.user_email,
-          accountNumbers,
+          accountNumbers: [...new Set(accountNumbers)],
           lastLogin: customer.user_last_login
         };
       }));

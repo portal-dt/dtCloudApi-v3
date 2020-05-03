@@ -15,6 +15,10 @@ export const getUserById = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
+    await db('archive.users')
+      .where({ [columnToSelect]: id })
+      .update('user_last_login', new Date());
+
     return res.status(200).json({
       user: {
         id: user.user_guid,
@@ -23,7 +27,8 @@ export const getUserById = async (req, res) => {
         email: user.user_email,
         mobile: user.user_mobile,
         language: user.user_locale,
-        format: user.user_langauge
+        format: user.user_langauge,
+        isAdmin: user.user_role === 'a'
       }
     });
   } catch (error) {

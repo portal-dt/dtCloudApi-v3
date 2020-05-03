@@ -15,6 +15,12 @@ export const login = async (req, res) => {
       return res.status(403).json({ message: 'User not found' });
     }
 
+    const isAdmin = user.user_role === 'a';
+    // only admins could login through regular login form
+    if (!isAdmin) {
+      return res.status(403).json({ message: 'Permissions denied!' });
+    }
+
     const isPasswordValid = compareSync(password, user.user_pw);
 
     if (!isPasswordValid) {
@@ -35,7 +41,8 @@ export const login = async (req, res) => {
         email: user.user_email,
         mobile: user.user_mobile,
         language: user.user_locale,
-        format: user.user_langauge
+        format: user.user_langauge,
+        isAdmin
       }
     });
   } catch (error) {
