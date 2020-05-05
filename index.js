@@ -13,22 +13,22 @@ import { getLatestDocumentsByCustomerId } from './src/controllers/getLatestDocum
 import { updateUserById } from './src/controllers/updateUserById';
 import { getUserById } from './src/controllers/getUserById';
 import { login } from './src/controllers/login';
+import { getBankIdUrl } from './src/controllers/getBankIdUrl';
 
 const app = express();
 
 app.use(cors());
 app.use(bodyParser.json());
 
-//todo add verifyToken middleware
-
-app.get('/v3/archive/documents', getDocuments);
-app.get('/v3/archive/documents/:id', getDocumentsByCustomerId);
-app.get('/v3/archive/documents/latest/:id', getLatestDocumentsByCustomerId);
-app.get('/v3/archive/customers', getCustomers);
-app.get('/v3/archive/document/:id', getDocumentById);
-app.put('/v3/archive/document', updateDocumentOpened);
-app.put('/v3/users/:id', updateUserById);
-app.get('/v3/users/:id', getUserById);
+app.get('/v3/archive/documents', verifyToken, getDocuments);
+app.get('/v3/archive/documents/:id', verifyToken, getDocumentsByCustomerId);
+app.get('/v3/archive/documents/latest/:id', verifyToken, getLatestDocumentsByCustomerId);
+app.get('/v3/archive/customers', verifyToken, getCustomers);
+app.get('/v3/bankIdUrl', verifyToken, getBankIdUrl);
+app.get('/v3/archive/document/:id', verifyToken, getDocumentById);
+app.put('/v3/archive/document', verifyToken, updateDocumentOpened);
+app.put('/v3/users/:id', verifyToken, updateUserById);
+app.get('/v3/users/:id', verifyToken, getUserById);
 
 app.post('/v3/login', login);
 

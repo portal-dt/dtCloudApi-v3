@@ -2,13 +2,21 @@ import jwt from 'jsonwebtoken';
 import { compareSync } from 'bcryptjs';
 
 import { db } from '../../config';
+import { getUserIdentifier } from '../utils';
 
 export const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, transactionId } = req.body;
+    let userIdentifier;
+
+    if (transactionId) {
+      userIdentifier = await getUserIdentifier(transactionId);
+    }
 
     const [ user ] = await db('archive.users').where({
-      user_email: email
+      ...(email && { user_email: email }),
+      ...(userIdentifier && { user_identifier: userIdentifier }),
+
     });
 
     if (!user) {
@@ -17,17 +25,18 @@ export const login = async (req, res) => {
 
     const isAdmin = user.user_role === 'a';
     // only admins could login through regular login form
-    if (!isAdmin) {
+    // if transactionId is passed, then user logged in via bankId
+    if (!isAdmin && !transactionId) {
       return res.status(403).json({ message: 'Permissions denied!' });
     }
 
-    const isPasswordValid = compareSync(password, user.user_pw);
+    const isPasswordValid = password && compareSync(password, user.user_pw);
 
-    if (!isPasswordValid) {
+    if (!isPasswordValid && !transactionId) {
       return res.status(401).json({ auth: false, accessToken: null, reason: 'Invalid Password!' });
     }
 
-    const token = jwt.sign({ id: user.user_guid }, 'secretKey', {
+    const token = jwt.sign({ id: user.user_guid }, process.env.ACCESS_TOKEN_SECRET, {
       expiresIn: 10800 // 3h
     });
 

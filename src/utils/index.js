@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { s3 } from '../../config';
 
 export const getDocumentFromS3 = async (documentKey, bucketLink) => {
@@ -57,3 +58,14 @@ export const getMappedDocuments = async (data, withContent) => await Promise.all
     };
   })
 );
+
+export const getUserIdentifier = async (transactionId) => {
+  const {
+    data: { providerInfo: { noBankIDAuth } }
+  } = await axios.get(
+    `${process.env.BANK_ID_BASE_URL}/transaction/${transactionId}`,
+    { headers: { 'Authorization': `Bearer ${process.env.BANK_ID_TOKEN}` } }
+    );
+
+  return noBankIDAuth.completionData.ssn;
+};
