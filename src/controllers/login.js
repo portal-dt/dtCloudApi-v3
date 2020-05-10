@@ -1,13 +1,21 @@
 import jwt from 'jsonwebtoken';
-import { compareSync } from 'bcryptjs';
 
 import { db } from '../../config';
-import { getUserIdentifier } from '../utils';
+import { getUserIdentifier, verifyOTP } from '../utils';
 
 export const login = async (req, res) => {
   try {
-    const { email, password, transactionId } = req.body;
     let userIdentifier;
+    const { email, transactionId, otp } = req.body;
+
+    if (otp) {
+      const isOTPValid = verifyOTP(otp);
+      console.log(isOTPValid);
+
+      if (!isOTPValid) {
+        return res.status(403).json({ message: 'Invalid OTP or expired!' });
+      }
+    }
 
     if (transactionId) {
       userIdentifier = await getUserIdentifier(transactionId);
@@ -23,17 +31,10 @@ export const login = async (req, res) => {
       return res.status(403).json({ message: 'User not found' });
     }
 
-    const isAdmin = user.user_role === 'a';
-    // only admins could login through regular login form
-    // if transactionId is passed, then user logged in via bankId
-    if (!isAdmin && !transactionId) {
-      return res.status(403).json({ message: 'Permissions denied!' });
-    }
-
-    const isPasswordValid = password && compareSync(password, user.user_pw);
-
-    if (!isPasswordValid && !transactionId) {
-      return res.status(401).json({ auth: false, accessToken: null, reason: 'Invalid Password!' });
+    if (!user.user_mfa && !transactionId) {
+      await db('archive.users')
+        .where('user_email', email)
+        .update('user_mfa', true);
     }
 
     const token = jwt.sign({ id: user.user_guid }, process.env.ACCESS_TOKEN_SECRET, {
@@ -51,7 +52,7 @@ export const login = async (req, res) => {
         mobile: user.user_mobile,
         language: user.user_locale,
         format: user.user_langauge,
-        isAdmin
+        isAdmin: user.user_role === 'a'
       }
     });
   } catch (error) {
