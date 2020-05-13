@@ -3,7 +3,7 @@ import { s3 } from '../../config';
 import speakeasy from 'speakeasy';
 import qrcode from 'qrcode';
 
-const OTPSecret = speakeasy.generateSecret({ name: 'dtPortal' });
+export const otpSecret = speakeasy.generateSecret({ name: 'dtPortal' });
 
 export const getDocumentFromS3 = async (documentKey, bucketLink) => {
   try {
@@ -74,10 +74,10 @@ export const getUserIdentifier = async (transactionId) => {
   return noBankIDAuth.completionData.ssn;
 };
 
-export const getQRCode = async () => await qrcode.toDataURL(OTPSecret.otpauth_url);
+export const getQRCode = async () => await qrcode.toDataURL(otpSecret.otpauth_url);
 
-export const verifyOTP = (token) => speakeasy.totp.verify({
-  secret: OTPSecret.base32,
+export const verifyOTP = (token, secret) => speakeasy.totp.verify({
   encoding: 'base32',
+  secret,
   token
 });

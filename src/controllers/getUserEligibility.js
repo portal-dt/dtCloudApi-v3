@@ -35,7 +35,6 @@ export const getUserEligibility = async (req, res) => {
 
     return res.status(200).json({
       eligible: true,
-      mfaEnabled: user.user_mfa,
       qrCode
     });
   } catch (error) {
